@@ -7,6 +7,9 @@
 #if y copied to merge array before x, then x>y and split inversion is present
 #when element of 2nd array C gets copied to output D, increment total by number of elements remaining in 1st array B
 
+#current result:   602716191
+#expected result: 2407905288
+
 import os
 
 def readFile():
@@ -26,16 +29,16 @@ def countSplitInv(x, y):
     result = []
 
     while (i < len(x) and j < len(y)):
-        if (x[i] < y[j]):
+        if (x[i] <= y[j]):
             result.append(x[i])
             i+=1
         else:
-            count+= len(x)-i #adds number of remaining elements in x to split inv count
             result.append(y[j])
             j+=1
+            count += len(x) - i #adds number of remaining elements in x to split inv count
 
-    result+=left[i:]
-    result+=right[j:]
+    result+=x[i:]
+    result+=y[j:]
 
     return result, count
 
@@ -44,14 +47,14 @@ def sort(array):
     #base case
     n = len(array)
     if (n == 1):
-        return 0
+        return array, 0
     else:
         middleIndex = int(n/2)
-        x = sort(array[:middleIndex])[0]
-        y = sort(array[middleIndex:])[0]
-        sortedlist, count = countSplitInv(x, y)
+        x, xi = sort(array[:middleIndex])
+        y, yi = sort(array[middleIndex:])
+        z, zi = countSplitInv(x, y)
 
-    return sortedlist, count
+    return z, xi+yi+zi
 
 if __name__ == "__main__":
     print(sort(readFile())[1])
